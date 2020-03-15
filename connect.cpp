@@ -2,25 +2,23 @@
 #include <QDebug>
 
 
-char * clientReceiving(Networks * net){
-
+void clientReceiving(Networks * net){
     int n, bytes_to_read;
-    char *bp = nullptr;
+    char rbuf[BUFLEN];
+    char *bp;
+    memset (rbuf,0,BUFLEN);
+    bp = rbuf;
 
-    bytes_to_read =BUFLEN;
+    bytes_to_read = BUFLEN;
 
     // client makes repeated calls to recv until no more data is expected to arrive.
     n = 0;
     while ((n = recv (net->sd, bp, bytes_to_read, 0)) < BUFLEN)
     {
-//        if((n = recv (network->sdClient, bp, bytes_to_read, 0)) < BUFLEN){
-            bp += n;
-            bytes_to_read -= n;
-//        }
+        bp += n;
+        bytes_to_read -= n;
     }
-    char c[5] = {'h','e','l','l','o'};
-    char * str = c;
-    return bp;
+    strncpy(net->message,rbuf,BUFLEN);
 }
 
 

@@ -29,6 +29,7 @@ typedef struct Network{
     int clientMode;
     const char* address;
     int connected;
+    char message[BUFLEN];
     pthread_t thread1;
 }Networks;
 
@@ -38,7 +39,7 @@ int initializedServer(Networks * net);
 int initializedClient(Networks * net);
 void* connectClientServer(void *);
 static void SystemFatal(const char* message);
-char * clientReceiving(Networks * net);
+void clientReceiving(Networks * net);
 void serverReceiving(Networks * net);
 
 

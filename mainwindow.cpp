@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QDebug>
 //Networks network;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,6 +31,7 @@ void MainWindow::connectPress(){
 
 void MainWindow::disconnectPress(){
     network.connected = 0;
+    ::close(network.sd);
     ui->connectPB->setEnabled(true);
     ui->statusQL->setText("Disconnect");
     ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(170, 0, 0);}"));
@@ -62,8 +63,8 @@ void* MainWindow::connectClientServer(void* network){
     MainWindow * win = (MainWindow *)network;
     if(win->network.clientMode){
         while(win->network.connected){
-            string mesgServ = clientReceiving(&win->network);
-            win->displayMessages(mesgServ.c_str());
+            clientReceiving(&win->network);
+            win->displayMessages(win->network.message);
         }
     }else{
         serverReceiving(&win->network);
@@ -82,6 +83,12 @@ void MainWindow::sendPress(){
 }
 
 void MainWindow::displayMessages(string mesgServ){
-    ui->messagesTB->setText( QString::fromStdString(mesgServ));
+    ui->messagesTB->insertPlainText("hello\r\nhhe");
+    ui->messagesTB->append("hello\r\nhhe");
+     ui->messagesTB->insertPlainText("hello\r\nhhe");
+     ui->messagesTB->append("hello\r\nhhe");
+     ui->messagesTB->append("hello\r\nhhe");
+     ui->messagesTB->append("hello\r\nhhe");
+//    ui->messagesTB->setText( QString::fromStdString(mesgServ));
 }
 
