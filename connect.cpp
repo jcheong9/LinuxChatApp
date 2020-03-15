@@ -28,9 +28,9 @@ void clientReceiving(MainWindow * win){
 
 
 void serverReceiving(MainWindow * win){
-
+    string msg;
     int nready, bytes_to_read;
-    int new_sd, sockfd, client_len;
+    int new_sd, sockfd, client_len,sockfdEcho;
     struct sockaddr_in client_addr;
     char *bp, buf[BUFLEN];
     int i, maxi;
@@ -59,7 +59,7 @@ void serverReceiving(MainWindow * win){
                return;
 //                SystemFatal("accept error");
             printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
-            string msg = "ID: " + to_string(new_sd);
+            msg = "ID: " + to_string(new_sd);
             msg = msg + " Remote Address: ";
             msg = msg + inet_ntoa(client_addr.sin_addr);
             win->displayMessages(msg);
@@ -87,12 +87,12 @@ void serverReceiving(MainWindow * win){
              }
 
         for (i = 0; i <= maxi; i++)	// check all clients for data
-            {
+        {
             if ((sockfd = client[i]) < 0)
                 continue;
 
             if (FD_ISSET(sockfd, &rset))
-                {
+            {
                     bp = buf;
                 bytes_to_read = BUFLEN;
                 while ((n = read(sockfd, bp, bytes_to_read)) > 0)
@@ -100,20 +100,55 @@ void serverReceiving(MainWindow * win){
                     bp += n;
                     bytes_to_read -= n;
                 }
-                write(sockfd, buf, BUFLEN);   // echo to client
-
-                if (n == 0) // connection closed by client
+                for (i = 0; i <= maxi; i++)	// echo to all clients
                 {
-                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-                    close(sockfd);
-                    FD_CLR(sockfd, &allset);
-                            client[i] = -1;
+                    if ((sockfdEcho = client[i]) < 0)
+                        continue;
+                    if(sockfdEcho != sockfd){
+                        msg = "ID: " + to_string(sockfd);
+                        msg = msg + " Message: ";
+                        msg = msg + buf;
+                        win->displayMessages(msg);
+                        write(sockfdEcho, buf, BUFLEN);   // echo to client
+                    }
                 }
+//                if (n == 0) // connection closed by client
+//                {
+//                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
+//                    msg = "ID: " + to_string(sockfd) +" Remote Address: " ;
+//                    msg = msg + inet_ntoa(client_addr.sin_addr);
+//                    msg = msg + " closed connection";
+//                    win->displayMessages(msg);
+//                    close(sockfd);
+//                    FD_CLR(sockfd, &allset);
+//                            client[i] = -1;
+//                }
 
                 if (--nready <= 0)
                             break;        // no more readable descriptors
             }
         }
     }
+//    for(i = 0; i <= maxi; i++){
+//        if ((sockfd = client[i]) < 0)
+//            continue;
+
+//        if (FD_ISSET(sockfd, &rset))
+//        {
+//            if (n == 0) // connection closed by client
+//            {
+//                printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
+//                msg = "ID: " + to_string(sockfd) +" Remote Address: " ;
+//                msg = msg + inet_ntoa(client_addr.sin_addr);
+//                msg = msg + " closed connection";
+//                win->displayMessages(msg);
+//                close(sockfd);
+//                FD_CLR(sockfd, &allset);
+//                        client[i] = -1;
+//            }
+//        }
+//    }
 }
+
+
 
