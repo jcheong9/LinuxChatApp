@@ -7,8 +7,8 @@
 #include <netinet/in.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <strings.h>
-#include <string.h>
+#include <cstring>
+#include <iostream>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -29,6 +29,7 @@ typedef struct Network{
     int clientMode;
     const char* address;
     int connected;
+    pthread_t thread1;
 }Networks;
 
 //Function protypes
@@ -37,4 +38,8 @@ int initializedServer(Networks * net);
 int initializedClient(Networks * net);
 void* connectClientServer(void *);
 static void SystemFatal(const char* message);
+char * clientReceiving(Networks * net);
+void serverReceiving(Networks * net);
+
+
 #endif // COMMON_H

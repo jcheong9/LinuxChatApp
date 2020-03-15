@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-Networks network;
+//Networks network;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     connect(ui->connectPB,SIGNAL(released()),this,SLOT(connectPress()));
     connect(ui->disconnectPB,SIGNAL(released()),this,SLOT(disconnectPress()));
-//    connect(ui->sendPB,SIGNAL(released()),this,SLOT(sendPress()));
+    connect(ui->sendPB,SIGNAL(released()),this,SLOT(sendPress()));
 }
 
 MainWindow::~MainWindow()
@@ -17,18 +17,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 void MainWindow::connectPress(){
-    pthread_t thread1;
-    getParameters();
+
+    getParameters(&network);
     if (connectivityManager(&network)){
         ui->connectPB->setEnabled(false);
+        network.connected = 1;
         setStatus("Connected",0);
-        // pthread_create(&thread1, nullptr, connectClientServer, (void *)this);
+        pthread_create(&network.thread1, nullptr, connectClientServer, (void *) this);
     }else{
         setStatus("Failed to Connected",1);
     }
 }
 
 void MainWindow::disconnectPress(){
+    network.connected = 0;
     ui->connectPB->setEnabled(true);
     ui->statusQL->setText("Disconnect");
     ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(170, 0, 0);}"));
@@ -45,10 +47,41 @@ void MainWindow::setStatus(string value, int error){
     ui->statusQL->setText(QString::fromStdString(value));
 }
 
-void MainWindow::getParameters(){
-    network.port= atoi(ui->portLE->text().toUtf8().constData());
-    network.address=ui->ipaddressLE->text().toUtf8().constData();
+void MainWindow::getParameters(Network* net){
+    net->port= atoi(ui->portLE->text().toUtf8().constData());
+    net->address=ui->ipaddressLE->text().toUtf8().constData();
     if(ui->clientRB->isChecked()){
-        network.clientMode = 1;
+        net->clientMode = 1;
+    }else{
+        net->clientMode = 0;
     }
 }
+
+void* MainWindow::connectClientServer(void* network){
+    //start receiveing thread
+    MainWindow * win = (MainWindow *)network;
+    if(win->network.clientMode){
+        while(win->network.connected){
+            string mesgServ = clientReceiving(&win->network);
+            win->displayMessages(mesgServ.c_str());
+        }
+    }else{
+        serverReceiving(&win->network);
+    }
+    return &win->network;
+}
+
+void MainWindow::sendPress(){
+    string message = ui->inputLE->text().toUtf8().constData();
+    if(network.clientMode && network.connected){
+        char sbuf[BUFLEN];
+        strncpy(sbuf, message.c_str(),BUFLEN);
+        send (network.sd, sbuf, BUFLEN, 0);
+    }
+
+}
+
+void MainWindow::displayMessages(string mesgServ){
+    ui->messagesTB->setText( QString::fromStdString(mesgServ));
+}
+

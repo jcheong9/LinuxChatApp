@@ -14,18 +14,22 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    static void * connectClientServer(void*);
+    void displayMessages(string mesgServ);
 
 private:
+    Networks network;
     Ui::MainWindow *ui;
     string status;
-    void getParameters();
+    void getParameters(Network* net);
 
 signals:
-    void valueChanage(string newVal);
+    //void valueChanage(string newVal);
 
 private slots:
     void disconnectPress();
     void connectPress();
+    void sendPress();
     void setStatus(string value, int error);
 };
 
