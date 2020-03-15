@@ -22,6 +22,36 @@ int connectivityManager(Network * net){
 
 int initializedClient(Network * net){
     //client function
+    struct hostent	*hp;
+    struct sockaddr_in server;
+    int port = net->port;
+    const char* address = net->address;
+    char **pptr;
+    // Create the socket
+    if ((net->sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    {
+        perror("Cannot create socket");
+        return 0;
+    }
+    bzero((char *)&server, sizeof(struct sockaddr_in));
+    server.sin_family = AF_INET;
+    server.sin_port = htons(port);
+    if ((hp = gethostbyname(address)) == NULL)
+    {
+        fprintf(stderr, "Unknown server address\n");
+        return 0;
+    }
+    bcopy(hp->h_addr, (char *)&server.sin_addr, hp->h_length);
+
+    // Connecting to the server
+    if (connect (net->sd , (struct sockaddr *)&server, sizeof(server)) == -1)
+    {
+        fprintf(stderr, "Can't connect to server\n");
+        perror("connect");
+        return 0;
+    }
+    printf("Connected:    Server Name: %s\n", hp->h_name);
+    pptr = hp->h_addr_list;
     return 1;
 }
 
@@ -33,15 +63,18 @@ int initializedServer(Network * net){
     int port = net->port;
 
     // Create a stream socket
-    if ((net->sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    if ((net->sd = socket(AF_INET, SOCK_STREAM, 0)) == -1){
+        SystemFatal("Cannot Create Socket!");
         return 0;
-        //SystemFatal("Cannot Create Socket!");
+    }
+
 
     // set SO_REUSEADDR so port can be resused imemediately after exit, i.e., after CTRL-c
     arg = 1;
-    if (setsockopt (net->sd , SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1)
+    if (setsockopt (net->sd , SOL_SOCKET, SO_REUSEADDR, &arg, sizeof(arg)) == -1){
+        SystemFatal("setsockopt");
         return 0;
-        //SystemFatal("setsockopt");
+    }
 
     // Bind an address to the socket
     bzero((char *)&server, sizeof(struct sockaddr_in));
@@ -49,13 +82,22 @@ int initializedServer(Network * net){
     server.sin_port = htons(port);
     server.sin_addr.s_addr = htonl(INADDR_ANY); // Accept connections from any client
 
-    if (bind(net->sd , (struct sockaddr *)&server, sizeof(server)) == -1)
+    if (bind(net->sd , (struct sockaddr *)&server, sizeof(server)) == -1){
+        SystemFatal("bind error");
         return 0;
-//        SystemFatal("bind error");
+    }
 
     // Listen for connections
     // queue up to LISTENQ connect requests
     listen(net->sd , LISTENQ);
 
     return 1;
+}
+
+
+// Prints the error stored in errno and aborts the program.
+static void SystemFatal(const char* message)
+{
+    perror (message);
+    exit (EXIT_FAILURE);
 }

@@ -26,7 +26,7 @@ signals:
 private slots:
     void disconnectPress();
     void connectPress();
-    void setStatus(string value);
+    void setStatus(string value, int error);
 };
 
 

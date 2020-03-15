@@ -20,7 +20,11 @@ void MainWindow::connectPress(){
     pthread_t thread1;
     getParameters();
     if (connectivityManager(&network)){
+        ui->connectPB->setEnabled(false);
+        setStatus("Connected",0);
         // pthread_create(&thread1, nullptr, connectClientServer, (void *)this);
+    }else{
+        setStatus("Failed to Connected",1);
     }
 }
 
@@ -31,7 +35,13 @@ void MainWindow::disconnectPress(){
     QString XMAX=ui->portLE->text();
 }
 
-void MainWindow::setStatus(string value){
+void MainWindow::setStatus(string value, int error){
+    if(error){
+        ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(170, 0, 0);}"));
+    }else{
+        ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(124,252,0);}"));
+    }
+
     ui->statusQL->setText(QString::fromStdString(value));
 }
 

@@ -36,5 +36,5 @@ int connectivityManager(Networks * net);
 int initializedServer(Networks * net);
 int initializedClient(Networks * net);
 void* connectClientServer(void *);
-
+static void SystemFatal(const char* message);
 #endif // COMMON_H
