@@ -18,12 +18,14 @@ public:
 private:
     Ui::MainWindow *ui;
     string status;
+    void getParameters();
 
 signals:
     void valueChanage(string newVal);
 
 private slots:
     void disconnectPress();
+    void connectPress();
     void setStatus(string value);
 };
 #endif // MAINWINDOW_H

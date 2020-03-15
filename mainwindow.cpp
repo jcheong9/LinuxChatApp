@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
+Network network;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -15,6 +17,12 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::connectPress(){
+    pthread_t thread1;
+    if (connectivityManager(network)){
+         pthread_create(&thread1, nullptr, connectClientServer, (void *)this);
+    }
+}
 
 void MainWindow::disconnectPress(){
     ui->connectPB->setEnabled(true);
@@ -25,4 +33,8 @@ void MainWindow::disconnectPress(){
 
 void MainWindow::setStatus(string value){
     ui->statusQL->setText(QString::fromStdString(value));
+}
+
+void MainWindow::getParameters(){
+
 }

@@ -1,6 +1,6 @@
 #include "connect.h"
 
-connect::connect()
-{
+void connectClientServer(){
 
 }
+

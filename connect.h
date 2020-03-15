@@ -1,11 +1,6 @@
 #ifndef CONNECT_H
 #define CONNECT_H
 
-
-class connect
-{
-public:
-    connect();
-};
+void* connectClientServer(void *);
 
 #endif // CONNECT_H
