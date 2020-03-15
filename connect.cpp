@@ -94,12 +94,12 @@ void serverReceiving(Networks * net){
                 write(sockfd, buf, BUFLEN);   // echo to client
 
                 if (n == 0) // connection closed by client
-                        {
+                {
                     printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
                     close(sockfd);
                     FD_CLR(sockfd, &allset);
                             client[i] = -1;
-                        }
+                }
 
                 if (--nready <= 0)
                             break;        // no more readable descriptors

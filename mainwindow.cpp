@@ -83,12 +83,6 @@ void MainWindow::sendPress(){
 }
 
 void MainWindow::displayMessages(string mesgServ){
-    ui->messagesTB->insertPlainText("hello\r\nhhe");
-    ui->messagesTB->append("hello\r\nhhe");
-     ui->messagesTB->insertPlainText("hello\r\nhhe");
-     ui->messagesTB->append("hello\r\nhhe");
-     ui->messagesTB->append("hello\r\nhhe");
-     ui->messagesTB->append("hello\r\nhhe");
-//    ui->messagesTB->setText( QString::fromStdString(mesgServ));
+     ui->messagesTB->append(QString::fromStdString(mesgServ));
 }
 
