@@ -15,13 +15,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     static void * connectClientServer(void*);
+    Networks* getNet(){
+        return &network;
+    }
+    QTextBrowser* getTB(){
+        return qtTB;
+    }
     void displayMessages(string mesgServ);
 
 private:
     Networks network;
     Ui::MainWindow *ui;
     string status;
+    QTextBrowser* qtTB;
     void getParameters(Network* net);
+
 
 signals:
     //void valueChanage(string newVal);
@@ -33,5 +41,6 @@ private slots:
     void setStatus(string value, int error);
 };
 
-
+void serverReceiving(MainWindow * win);
+void clientReceiving(MainWindow * win);
 #endif // MAINWINDOW_H

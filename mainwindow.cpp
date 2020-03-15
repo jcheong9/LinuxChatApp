@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    qtTB = ui->messagesTB;
     ui->setupUi(this);
     connect(ui->connectPB,SIGNAL(released()),this,SLOT(connectPress()));
     connect(ui->disconnectPB,SIGNAL(released()),this,SLOT(disconnectPress()));
@@ -63,11 +64,12 @@ void* MainWindow::connectClientServer(void* network){
     MainWindow * win = (MainWindow *)network;
     if(win->network.clientMode){
         while(win->network.connected){
-            clientReceiving(&win->network);
-            win->displayMessages(win->network.message);
+            clientReceiving(win);
+            //QMetaObject::invokeMethod(win->ui->messagesTB, "append", Q_ARG(QString, win->network.message));
+//            win->displayMessages(win->network.message);
         }
     }else{
-        serverReceiving(&win->network);
+        serverReceiving(win);
     }
     return &win->network;
 }
@@ -83,6 +85,6 @@ void MainWindow::sendPress(){
 }
 
 void MainWindow::displayMessages(string mesgServ){
-     ui->messagesTB->append(QString::fromStdString(mesgServ));
+    QMetaObject::invokeMethod(ui->messagesTB, "append", Q_ARG(QString, "Remote Address:"));
 }
 

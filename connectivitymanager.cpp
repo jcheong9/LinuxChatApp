@@ -58,8 +58,7 @@ int initializedClient(Network * net){
 int initializedServer(Network * net){
     //server function
     struct sockaddr_in server;
-    int  arg;
-
+    int arg;
     int port = net->port;
 
     // Create a stream socket

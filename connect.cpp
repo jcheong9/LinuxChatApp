@@ -1,8 +1,9 @@
 #include "common.h"
+#include "mainwindow.h"
 #include <QDebug>
 
-
-void clientReceiving(Networks * net){
+void clientReceiving(MainWindow * win){
+    Networks* net = win->getNet();
     int n, bytes_to_read;
     char rbuf[BUFLEN];
     char *bp;
@@ -18,11 +19,14 @@ void clientReceiving(Networks * net){
         bp += n;
         bytes_to_read -= n;
     }
-    strncpy(net->message,rbuf,BUFLEN);
+
+    win->displayMessages(rbuf);
+//    strncpy(net->message,rbuf,BUFLEN);
 }
 
 
-void serverReceiving(Networks * net){
+void serverReceiving(MainWindow * win){
+
     int nready, bytes_to_read;
     int new_sd, sockfd, client_len;
     struct sockaddr_in client_addr;
@@ -31,6 +35,7 @@ void serverReceiving(Networks * net){
     int maxfd, client[FD_SETSIZE];
     ssize_t n;
     fd_set rset, allset;
+    Networks* net = win->getNet();
 
     maxfd	= net->sd;	// initialize
     maxi	= -1;		// index into client[] array
@@ -51,9 +56,9 @@ void serverReceiving(Networks * net){
             if ((new_sd = accept(net->sd, (struct sockaddr *) &client_addr, (socklen_t *) &client_len)) == -1)
                return;
 //                SystemFatal("accept error");
-
             printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
 
+            win->displayMessages("joig");
             for (i = 0; i < FD_SETSIZE; i++)
             if (client[i] < 0)
                     {

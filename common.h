@@ -13,7 +13,8 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "connectivitymanager.h"
-#include "connect.h"
+#include <QTextBrowser>
+
 using namespace std;
 
 #define SERVER_TCP_PORT 7000	// Default port
@@ -29,7 +30,7 @@ typedef struct Network{
     int clientMode;
     const char* address;
     int connected;
-    char message[BUFLEN];
+//    char message[BUFLEN];
     pthread_t thread1;
 }Networks;
 
@@ -39,8 +40,8 @@ int initializedServer(Networks * net);
 int initializedClient(Networks * net);
 void* connectClientServer(void *);
 static void SystemFatal(const char* message);
-void clientReceiving(Networks * net);
-void serverReceiving(Networks * net);
+
+
 
 
 #endif // COMMON_H
