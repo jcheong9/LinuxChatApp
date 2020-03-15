@@ -1,8 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-
-Network network;
+Networks network;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -19,8 +18,9 @@ MainWindow::~MainWindow()
 }
 void MainWindow::connectPress(){
     pthread_t thread1;
-    if (connectivityManager(network)){
-         pthread_create(&thread1, nullptr, connectClientServer, (void *)this);
+    getParameters();
+    if (connectivityManager(&network)){
+        // pthread_create(&thread1, nullptr, connectClientServer, (void *)this);
     }
 }
 
@@ -36,5 +36,9 @@ void MainWindow::setStatus(string value){
 }
 
 void MainWindow::getParameters(){
-
+    network.port= atoi(ui->portLE->text().toUtf8().constData());
+    network.address=ui->ipaddressLE->text().toUtf8().constData();
+    if(ui->clientRB->isChecked()){
+        network.clientMode = 1;
+    }
 }

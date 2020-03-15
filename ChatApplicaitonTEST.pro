@@ -23,8 +23,6 @@ SOURCES += \
 
 HEADERS += \
     common.h \
-    connect.h \
-    connectivitymanager.h \
     mainwindow.h
 
 FORMS += \

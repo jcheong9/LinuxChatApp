@@ -28,4 +28,6 @@ private slots:
     void connectPress();
     void setStatus(string value);
 };
+
+
 #endif // MAINWINDOW_H

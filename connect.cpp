@@ -1,6 +1,7 @@
-#include "connect.h"
+#include "common.h"
+#include <QDebug>
 
-void connectClientServer(){
-
+void* connectClientServer(void*){
+    qDebug() << "connecting client";
 }
 
