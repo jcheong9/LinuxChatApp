@@ -63,11 +63,7 @@ void* MainWindow::connectClientServer(void* network){
     //start receiveing thread
     MainWindow * win = (MainWindow *)network;
     if(win->network.clientMode){
-        while(win->network.connected){
-            clientReceiving(win);
-            //QMetaObject::invokeMethod(win->ui->messagesTB, "append", Q_ARG(QString, win->network.message));
-//            win->displayMessages(win->network.message);
-        }
+        clientReceiving(win);
     }else{
         serverReceiving(win);
     }
@@ -85,6 +81,7 @@ void MainWindow::sendPress(){
 }
 
 void MainWindow::displayMessages(string mesgServ){
-    QMetaObject::invokeMethod(ui->messagesTB, "append", Q_ARG(QString, "Remote Address:"));
+    QString qtstr = QString::fromStdString(mesgServ);
+    QMetaObject::invokeMethod(ui->messagesTB, "append", Q_ARG(QString, qtstr));
 }
 

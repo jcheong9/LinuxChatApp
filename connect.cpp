@@ -13,14 +13,16 @@ void clientReceiving(MainWindow * win){
     bytes_to_read = BUFLEN;
 
     // client makes repeated calls to recv until no more data is expected to arrive.
-    n = 0;
-    while ((n = recv (net->sd, bp, bytes_to_read, 0)) < BUFLEN)
-    {
-        bp += n;
-        bytes_to_read -= n;
+    while(net->connected){
+        n = 0;
+        while ((n = recv (net->sd, bp, bytes_to_read, 0)) < BUFLEN)
+        {
+            bp += n;
+            bytes_to_read -= n;
+        }
+        win->displayMessages(rbuf);
     }
 
-    win->displayMessages(rbuf);
 //    strncpy(net->message,rbuf,BUFLEN);
 }
 
@@ -57,8 +59,10 @@ void serverReceiving(MainWindow * win){
                return;
 //                SystemFatal("accept error");
             printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
-
-            win->displayMessages("joig");
+            string msg = "ID: " + to_string(new_sd);
+            msg = msg + " Remote Address: ";
+            msg = msg + inet_ntoa(client_addr.sin_addr);
+            win->displayMessages(msg);
             for (i = 0; i < FD_SETSIZE; i++)
             if (client[i] < 0)
                     {
