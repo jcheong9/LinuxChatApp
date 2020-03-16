@@ -93,7 +93,7 @@ void serverReceiving(MainWindow * win){
 
             if (FD_ISSET(sockfd, &rset))
             {
-                    bp = buf;
+                bp = buf;
                 bytes_to_read = BUFLEN;
                 while ((n = read(sockfd, bp, bytes_to_read)) > 0)
                 {
@@ -104,17 +104,7 @@ void serverReceiving(MainWindow * win){
                 {
                     if ((sockfdEcho = client[i]) < 0)
                         continue;
-
-                    if(isclosed(sockfd)){
-                        printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-                        msg = "Client: " + to_string(sockfd) +" Remote Address: " ;
-                        msg = msg + inet_ntoa(client_addr.sin_addr);
-                        msg = msg + " closed connection";
-                        win->displayMessages(msg);
-                        close(sockfd);
-                        FD_CLR(sockfd, &allset);
-                            client[i] = -1;
-                    }else if(sockfdEcho != sockfd){
+                    if(!isclosed(sockfd) && sockfdEcho != sockfd) {
                         msg = "Client " + to_string(sockfd);
                         msg = msg + " : ";
                         msg = msg + buf;
@@ -122,13 +112,21 @@ void serverReceiving(MainWindow * win){
                         msg = msg + "; Sent To Client: " + to_string(sockfdEcho);
                         win->displayMessages(msg);
                     }
-
                 }
-
-
 
                 if (--nready <= 0)
                     break;        // no more readable descriptors
+            }
+
+            if(!isclosed(sockfd)){
+                printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
+                msg = "Client: " + to_string(sockfd) +" Remote Address: " ;
+                msg = msg + inet_ntoa(client_addr.sin_addr);
+                msg = msg + " closed connection";
+                win->displayMessages(msg);
+                close(sockfd);
+                FD_CLR(sockfd, &allset);
+                    client[i] = -1;
             }
         }
     }
