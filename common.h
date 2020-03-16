@@ -33,7 +33,6 @@ typedef struct Network{
     int clientMode;
     const char* address;
     int connected;
-//    char message[BUFLEN];
     pthread_t thread1;
 }Networks;
 

@@ -18,9 +18,6 @@ public:
     Networks* getNet(){
         return &network;
     }
-    QTextBrowser* getTB(){
-        return qtTB;
-    }
     void displayMessages(string mesgServ);
 
 private:
@@ -31,9 +28,6 @@ private:
     void getParameters(Network* net);
     void saveToFile();
 
-
-signals:
-    //void valueChanage(string newVal);
 
 private slots:
     void disconnectPress();

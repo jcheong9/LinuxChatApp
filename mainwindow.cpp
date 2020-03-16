@@ -39,7 +39,6 @@ void MainWindow::disconnectPress(){
     ui->connectPB->setEnabled(true);
     ui->statusQL->setText("Disconnect");
     ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(170, 0, 0);}"));
-    QString XMAX=ui->portLE->text();
 }
 
 void MainWindow::setStatus(string value, int error){
@@ -48,7 +47,6 @@ void MainWindow::setStatus(string value, int error){
     }else{
         ui->statusQL->setStyleSheet(QStringLiteral("QLabel{color: rgb(124,252,0);}"));
     }
-
     ui->statusQL->setText(QString::fromStdString(value));
 }
 
