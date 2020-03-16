@@ -1,0 +1,6 @@
+#ifndef CONNECTIVITYMANAGER_H
+#define CONNECTIVITYMANAGER_H
+#include "common.h"
+
+
+#endif // CONNECTIVITYMANAGER_H
