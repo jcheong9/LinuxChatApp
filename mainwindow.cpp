@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectPB,SIGNAL(released()),this,SLOT(connectPress()));
     connect(ui->disconnectPB,SIGNAL(released()),this,SLOT(disconnectPress()));
     connect(ui->sendPB,SIGNAL(released()),this,SLOT(sendPress()));
+    connect(ui->actionSave, &QAction::triggered, [=]() {
+      saveToFile();
+    });
 }
 
 MainWindow::~MainWindow()
@@ -85,3 +88,23 @@ void MainWindow::displayMessages(string mesgServ){
     QMetaObject::invokeMethod(ui->messagesTB, "append", Q_ARG(QString, qtstr));
 }
 
+void MainWindow::saveToFile()
+{
+    QString str = ui->messagesTB->toPlainText();
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Messages"), "",
+        tr("All Files (*)"));
+    if (fileName.isEmpty())
+        return;
+    else {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            QMessageBox::information(this, tr("Unable to open file"),
+                file.errorString());
+            return;
+        }
+
+        QTextStream out(&file);
+        out << ui->messagesTB->toPlainText();
+    }
+}

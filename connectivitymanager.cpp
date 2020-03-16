@@ -98,5 +98,5 @@ int initializedServer(Network * net){
 static void SystemFatal(const char* message)
 {
     perror (message);
-    exit (EXIT_FAILURE);
+    //exit (EXIT_FAILURE);
 }

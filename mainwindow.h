@@ -29,6 +29,7 @@ private:
     string status;
     QTextBrowser* qtTB;
     void getParameters(Network* net);
+    void saveToFile();
 
 
 signals:

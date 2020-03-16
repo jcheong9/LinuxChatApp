@@ -35,7 +35,7 @@ void serverReceiving(MainWindow * win){
     char *bp, buf[BUFLEN];
     int i, maxi;
     int maxfd, client[FD_SETSIZE];
-    ssize_t n;
+    ssize_t n, k;
     fd_set rset, allset;
     Networks* net = win->getNet();
 
@@ -54,36 +54,36 @@ void serverReceiving(MainWindow * win){
 
             if (FD_ISSET(net->sd, &rset)) // new client connection
             {
-            client_len = sizeof(client_addr);
-            if ((new_sd = accept(net->sd, (struct sockaddr *) &client_addr, (socklen_t *) &client_len)) == -1)
-               return;
-//                SystemFatal("accept error");
-            printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
-            msg = "ID: " + to_string(new_sd);
-            msg = msg + " Remote Address: ";
-            msg = msg + inet_ntoa(client_addr.sin_addr);
-            win->displayMessages(msg);
-            for (i = 0; i < FD_SETSIZE; i++)
-            if (client[i] < 0)
-                    {
-                client[i] = new_sd;	// save descriptor
-                break;
-                    }
-            if (i == FD_SETSIZE)
+                client_len = sizeof(client_addr);
+                if ((new_sd = accept(net->sd, (struct sockaddr *) &client_addr, (socklen_t *) &client_len)) == -1)
+                   return;
+    //                SystemFatal("accept error");
+                printf(" Remote Address:  %s\n", inet_ntoa(client_addr.sin_addr));
+                msg = "Client: " + to_string(new_sd);
+                msg = msg + " Remote Address: ";
+                msg = msg + inet_ntoa(client_addr.sin_addr);
+                win->displayMessages(msg);
+                for (i = 0; i < FD_SETSIZE; i++)
+                if (client[i] < 0)
                 {
-                printf ("Too many clients\n");
-                        exit(1);
+                    client[i] = new_sd;	// save descriptor
+                    break;
+                }
+                if (i == FD_SETSIZE)
+                {
+                    printf ("Too many clients\n");
+                    exit(1);
                 }
 
-            FD_SET (new_sd, &allset);     // add new descriptor to set
-            if (new_sd > maxfd)
-                maxfd = new_sd;	// for select
+                FD_SET (new_sd, &allset);     // add new descriptor to set
+                if (new_sd > maxfd)
+                    maxfd = new_sd;	// for select
 
-            if (i > maxi)
-                maxi = i;	// new max index in client[] array
+                if (i > maxi)
+                    maxi = i;	// new max index in client[] array
 
-            if (--nready <= 0)
-                continue;	// no more readable descriptors
+                if (--nready <= 0)
+                    continue;	// no more readable descriptors
              }
 
         for (i = 0; i <= maxi; i++)	// check all clients for data
@@ -104,50 +104,47 @@ void serverReceiving(MainWindow * win){
                 {
                     if ((sockfdEcho = client[i]) < 0)
                         continue;
-                    if(sockfdEcho != sockfd){
-                        msg = "ID: " + to_string(sockfd);
-                        msg = msg + " Message: ";
-                        msg = msg + buf;
+
+                    if(isclosed(sockfd)){
+                        printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
+                        msg = "Client: " + to_string(sockfd) +" Remote Address: " ;
+                        msg = msg + inet_ntoa(client_addr.sin_addr);
+                        msg = msg + " closed connection";
                         win->displayMessages(msg);
-                        write(sockfdEcho, buf, BUFLEN);   // echo to client
+                        close(sockfd);
+                        FD_CLR(sockfd, &allset);
+                            client[i] = -1;
+                    }else if(sockfdEcho != sockfd){
+                        msg = "Client " + to_string(sockfd);
+                        msg = msg + " : ";
+                        msg = msg + buf;
+                        k = write(sockfdEcho, msg.c_str(), BUFLEN);   // echo to client
+                        msg = msg + "; Sent To Client: " + to_string(sockfdEcho);
+                        win->displayMessages(msg);
                     }
+
                 }
-//                if (n == 0) // connection closed by client
-//                {
-//                    printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-//                    msg = "ID: " + to_string(sockfd) +" Remote Address: " ;
-//                    msg = msg + inet_ntoa(client_addr.sin_addr);
-//                    msg = msg + " closed connection";
-//                    win->displayMessages(msg);
-//                    close(sockfd);
-//                    FD_CLR(sockfd, &allset);
-//                            client[i] = -1;
-//                }
+
+
 
                 if (--nready <= 0)
-                            break;        // no more readable descriptors
+                    break;        // no more readable descriptors
             }
         }
     }
-//    for(i = 0; i <= maxi; i++){
-//        if ((sockfd = client[i]) < 0)
-//            continue;
+}
 
-//        if (FD_ISSET(sockfd, &rset))
-//        {
-//            if (n == 0) // connection closed by client
-//            {
-//                printf(" Remote Address:  %s closed connection\n", inet_ntoa(client_addr.sin_addr));
-//                msg = "ID: " + to_string(sockfd) +" Remote Address: " ;
-//                msg = msg + inet_ntoa(client_addr.sin_addr);
-//                msg = msg + " closed connection";
-//                win->displayMessages(msg);
-//                close(sockfd);
-//                FD_CLR(sockfd, &allset);
-//                        client[i] = -1;
-//            }
-//        }
-//    }
+bool isclosed(int sock) {
+  fd_set rfd;
+  FD_ZERO(&rfd);
+  FD_SET(sock, &rfd);
+  timeval tv = { 0 };
+  select(sock+1, &rfd, 0, 0, &tv);
+  if (!FD_ISSET(sock, &rfd))
+    return false;
+  int n = 0;
+  ioctl(sock, FIONREAD, &n);
+  return n == 0;
 }
 
 

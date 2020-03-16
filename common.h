@@ -14,6 +14,9 @@
 #include <pthread.h>
 #include "connectivitymanager.h"
 #include <QTextBrowser>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <sys/ioctl.h>
 
 using namespace std;
 
@@ -40,7 +43,7 @@ int initializedServer(Networks * net);
 int initializedClient(Networks * net);
 void* connectClientServer(void *);
 static void SystemFatal(const char* message);
-
+bool isclosed(int sock);
 
 
 
