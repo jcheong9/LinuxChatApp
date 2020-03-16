@@ -1,3 +1,20 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: mainwindow.h - contains the declaration functions for QT GUI.
+--
+-- PROGRAM: Linux Chat Application
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS:
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- NOTES:
+-- This is a header file contains declaration functions for QT GUI objects.
+----------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "common.h"
@@ -27,7 +44,6 @@ private:
     QTextBrowser* qtTB;
     void getParameters(Network* net);
     void saveToFile();
-
 
 private slots:
     void disconnectPress();

@@ -1,6 +1,51 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: connect.cpp - A file contains receiving process of client and server.
+--
+--
+-- PROGRAM: Linux Chat Application
+--
+-- FUNCTIONS:
+--		void clientReceiving(MainWindow * win)
+--		void serverReceiving(MainWindow * win)
+--      bool isclosed(int sock)
+--
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- NOTES:
+-- This file contains functions will manage the receiving process for client and server.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 #include "common.h"
 #include "mainwindow.h"
 #include <QDebug>
+
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: clientReceiving
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: void clientReceiving(MainWindow * win)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function is client-side receiving. It will process any incoming messsages from the server and
+-- display on the GUI.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 
 void clientReceiving(MainWindow * win){
     Networks* net = win->getNet();
@@ -29,7 +74,27 @@ void clientReceiving(MainWindow * win){
     }
 }
 
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: serverReceiving
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: void serverReceiving(MainWindow * win)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function is server-side receiving. It processes any incoming messsages from the client and
+-- send messages to other clients connected. If new client connected, the server displays new connected
+-- client on the GUI.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 void serverReceiving(MainWindow * win){
     string msg;
     int nready, bytes_to_read;
@@ -133,7 +198,25 @@ void serverReceiving(MainWindow * win){
         }
     }
 }
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: isclosed
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: bool isclosed(int sock)
+--
+-- RETURNS: bool
+--
+-- NOTES:
+-- This function is checks client's socket is closed.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 bool isclosed(int sock) {
   fd_set rfd;
   FD_ZERO(&rfd);

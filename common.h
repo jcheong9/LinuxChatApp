@@ -1,3 +1,19 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: common.h - contains the declaration functions for this application.
+--
+-- PROGRAM: Linux Chat Application
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS:
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- NOTES:
+-- This is a header file contains declaration functions client.
+----------------------------------------------------------------------------------------------------------------------*/
 #ifndef COMMON_H
 #define COMMON_H
 #include <stdio.h>
@@ -10,6 +26,7 @@
 #include <cstring>
 #include <iostream>
 #include <arpa/inet.h>
+
 #include <unistd.h>
 #include <pthread.h>
 #include "connectivitymanager.h"

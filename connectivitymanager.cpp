@@ -1,6 +1,49 @@
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: connectivitymanager.cpp - A file contains server and client connection.
+--
+--
+-- PROGRAM: Linux Chat Application
+--
+-- FUNCTIONS:
+--		int connectivityManager(Network * net)
+--		int initializedServer(Network * net)
+--      int initializedServer(Network * net)
+--      static void SystemFatal(const char* message)
+--
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- NOTES:
+-- This file contains functions manage connections for client and server.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 #include "connectivitymanager.h"
 #include "common.h"
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: connectivityManager
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: int connectivityManager(Network * net)
+--
+-- RETURNS: int
+--
+-- NOTES:
+-- This function is checks client mode is selected and inputs are empty.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 int connectivityManager(Network * net){
     if(net->port == 0){
         return 0;
@@ -19,7 +62,25 @@ int connectivityManager(Network * net){
     }
     return 0;
 }
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: initializedClient
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: int initializedClient(Network * net)
+--
+-- RETURNS: int
+--
+-- NOTES:
+-- This function is initialized connection for client to server. It returns 1 successfully and 0 failed.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 int initializedClient(Network * net){
     //client function
     struct hostent	*hp;
@@ -54,7 +115,25 @@ int initializedClient(Network * net){
     pptr = hp->h_addr_list;
     return 1;
 }
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: initializedServer
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: int initializedServer(Network * net)
+--
+-- RETURNS: int
+--
+-- NOTES:
+-- This function is initialized connection for server to client. It returns 1 successfully and 0 failed.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 int initializedServer(Network * net){
     //server function
     struct sockaddr_in server;
@@ -93,8 +172,25 @@ int initializedServer(Network * net){
     return 1;
 }
 
-
-// Prints the error stored in errno and aborts the program.
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: SystemFatal
+--
+-- DATE: March 15, 2020
+--
+-- REVISIONS: (Date and Description)
+--
+-- DESIGNER: Jameson Cheong
+--
+-- PROGRAMMER: Jameson Cheong
+--
+-- INTERFACE: static void SystemFatal(const char* message)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function prints the error stored in errno and aborts the program.
+--
+----------------------------------------------------------------------------------------------------------------------*/
 static void SystemFatal(const char* message)
 {
     perror (message);
