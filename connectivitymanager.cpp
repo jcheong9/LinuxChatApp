@@ -6,7 +6,7 @@
 --
 -- FUNCTIONS:
 --		int connectivityManager(Network * net)
---		int initializedServer(Network * net)
+--		int initializedClient(Network * net)
 --      int initializedServer(Network * net)
 --      static void SystemFatal(const char* message)
 --
