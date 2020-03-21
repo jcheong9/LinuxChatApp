@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
+
 /*------------------------------------------------------------------------------------------------------------------
 -- SOURCE FILE: main.cpp - A simple program for client to chat between each other. The server send any incoming
 --                         messages to clients connects and displays client connected. The client-side displayed
